@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--perforce-xml-version=1.0-->
+<PropertyList varName="ApplicationSettings" IsManaged="TRUE">
+ <PropertyList varName="Connection" IsManaged="TRUE">
+  <StringList varName="OpenWorkspaces">
+   <String></String>
+  </StringList>
+ </PropertyList>
+</PropertyList>

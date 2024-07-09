@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--perforce-xml-version=1.0-->
+<PropertyList varName="ApplicationSettings" IsManaged="TRUE">
+ <Font varName="ApplicationFont">
+  <family>MS Shell Dlg 2</family>
+  <pointSize>8</pointSize>
+  <weight>true</weight>
+  <italic>false</italic>
+ </Font>
+ <String varName="CharSet">none</String>
+ <String varName="DiffOption">dl</String>
+ <Font varName="Font">
+  <family>Courier New</family>
+  <pointSize>10</pointSize>
+  <weight>true</weight>
+  <italic>false</italic>
+ </Font>
+ <Bool varName="InlineDiffsEnabled">true</Bool>
+ <String varName="LineEnding">Windows</String>
+ <Bool varName="ShowTabsSpaces">false</Bool>
+ <Bool varName="TabInsertsSpaces">false</Bool>
+ <Int varName="TabWidth">4</Int>
+ <PropertyList varName="Windows" IsManaged="TRUE">
+  <PropertyList varName="CompareDialog" IsManaged="TRUE">
+   <ByteArray varName="WindowGeometry">AdnQywACAAAAAALFAAABbQAABLsAAAJ7AAACzgAAAZMAAASyAAACcgAAAAAAAAAAB4A=</ByteArray>
+  </PropertyList>
+ </PropertyList>
+</PropertyList>

@@ -1,0 +1,14 @@
+[gui]
+	recentrepo = C:/Users/simplon/projet renato
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[user]
+	name = tcbrenato
+	email = renatotchobo0@gmail.com
+[color]
+	ui = true
+[alias]
+	historique = log
