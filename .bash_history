@@ -218,3 +218,7 @@ git clone https://github.com/jeanapotreaikou/handinum2.git
 git clone  https://github.com/jeanapotreaikou/handinum3.git
 git clone  https://github.com/jeanapotreaikou/handinum2.git
 git clone https://github.com/jeanapotreaikou/handinum2
+git clone https://github.com/jeanapotreaikou/handinum2.git
+git clone https://github.com/dgeo-dev/formation-youtube-html-cs-js/tree/js
+git clone https://github.com/tcbrenato/Mon-portfolio-TCB
+git clone https://github.com/dgeo-dev/formation-youtube-html-cs-js
