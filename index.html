@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>GEOTECH — Rénato TCHOBO</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/workspace/styles.css" />
+	<script defer src="/workspace/app.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-YkD2y9yGJ1lW28oZUNk+4nqgK3K1kzODmLNn2+Q8b1tsK+o2qg2kF2c1VfRrKQbqk2cQZq2XWQ8I9k0P9qdQ0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js" integrity="sha512-8d3gV5mJvY3zN9hQ8x0aQjKCB7G9f8wD9H1wO3rQBGQmW6yQGgqz8YFq9YQzUu0EuMPv2Wy7lWk0QFZb2bQEMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+	<header class="app-header">
+		<div class="brand">
+			<div class="logo">G</div>
+			<div class="brand-text">
+				<div class="title">GEOTECH</div>
+				<div class="subtitle">par Rénato TCHOBO</div>
+			</div>
+		</div>
+		<div class="user-area">
+			<span id="roleBadge" class="badge">Utilisateur</span>
+			<button id="toggleThemeBtn" class="ghost-btn" aria-label="Basculer thème">🌓</button>
+		</div>
+	</header>
+
+	<nav class="tabbar" role="tablist" aria-label="Navigation principale">
+		<button class="tab active" data-target="dashboard" role="tab" aria-selected="true">Tableau de bord</button>
+		<button class="tab" data-target="stock" role="tab">Gestion Stock</button>
+		<button class="tab" data-target="caisse" role="tab">Caisse</button>
+		<button class="tab" data-target="settings" role="tab">Paramètres</button>
+		<button class="tab" data-target="reports" role="tab">Rapports</button>
+	</nav>
+
+	<main class="views">
+		<section id="dashboard" class="view active" aria-labelledby="Tableau de bord">
+			<div class="cards">
+				<div class="card kpi">
+					<div class="kpi-label">Produits</div>
+					<div id="kpiProducts" class="kpi-value">0</div>
+				</div>
+				<div class="card kpi">
+					<div class="kpi-label">Stock total</div>
+					<div id="kpiStock" class="kpi-value">0 casiers · 0 bouteilles</div>
+				</div>
+				<div class="card kpi">
+					<div class="kpi-label">Ventes du jour</div>
+					<div id="kpiSales" class="kpi-value">0</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-title">Alertes stock bas</div>
+				<ul id="lowStockList" class="list"></ul>
+			</div>
+			<div class="quick-actions">
+				<button class="primary" data-goto="stock">Aller à Gestion Stock</button>
+				<button class="primary" data-goto="caisse">Aller à Caisse</button>
+				<button class="secondary" data-goto="settings">Paramètres</button>
+				<button class="secondary" data-goto="reports">Rapports</button>
+			</div>
+		</section>
+
+		<section id="stock" class="view" aria-labelledby="Gestion Stock">
+			<div class="card">
+				<div class="card-title">Mise à jour du stock</div>
+				<form id="stockForm" class="form-grid" autocomplete="off">
+					<label>
+						<span>Produit</span>
+						<select id="stockProduct" required></select>
+					</label>
+					<label>
+						<span>Type de casier</span>
+						<select id="stockCrateSize">
+							<option value="12">12</option>
+							<option value="20">20</option>
+							<option value="24">24</option>
+						</select>
+					</label>
+
+					<label>
+						<span>Quantité casiers</span>
+						<input id="qtyCrates" type="number" inputmode="numeric" min="0" placeholder="0" />
+					</label>
+					<label>
+						<span>Quantité bouteilles</span>
+						<input id="qtyBottles" type="number" inputmode="numeric" min="0" placeholder="0" />
+					</label>
+
+					<label>
+						<span>Nouvel arrivage casiers</span>
+						<input id="arrCrates" type="number" inputmode="numeric" min="0" placeholder="0" />
+					</label>
+					<label>
+						<span>Nouvel arrivage bouteilles</span>
+						<input id="arrBottles" type="number" inputmode="numeric" min="0" placeholder="0" />
+					</label>
+
+					<label>
+						<span>Total casiers</span>
+						<input id="totalCrates" type="number" readonly />
+					</label>
+					<label>
+						<span>Total bouteilles</span>
+						<input id="totalBottles" type="number" readonly />
+					</label>
+
+					<label>
+						<span>Vendus casiers</span>
+						<input id="soldCrates" type="number" inputmode="numeric" min="0" placeholder="0" />
+					</label>
+					<label>
+						<span>Vendus bouteilles</span>
+						<input id="soldBottles" type="number" inputmode="numeric" min="0" placeholder="0" />
+					</label>
+
+					<label>
+						<span>Reste casiers</span>
+						<input id="restCrates" type="number" readonly />
+					</label>
+					<label>
+						<span>Reste bouteilles</span>
+						<input id="restBottles" type="number" readonly />
+					</label>
+
+					<div class="form-actions">
+						<button type="submit" class="primary">Enregistrer le stock</button>
+						<button type="reset" class="secondary" id="clearStockForm">Effacer</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="card">
+				<div class="card-title">État du stock</div>
+				<div class="table-wrapper">
+					<table id="stockTable">
+						<thead>
+							<tr>
+								<th>Produit</th>
+								<th>Type</th>
+								<th>Reste casiers</th>
+								<th>Reste bouteilles</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<section id="caisse" class="view" aria-labelledby="Caisse">
+			<div class="card">
+				<div class="card-title">Nouvelle vente</div>
+				<form id="saleForm" class="form-grid" autocomplete="off">
+					<label>
+						<span>Produit</span>
+						<select id="saleProduct" required></select>
+					</label>
+					<label>
+						<span>Unité</span>
+						<select id="saleUnit">
+							<option value="casier">Casier</option>
+							<option value="bouteille">Bouteille</option>
+						</select>
+					</label>
+					<label>
+						<span>Quantité vendue</span>
+						<input id="saleQty" type="number" inputmode="numeric" min="1" placeholder="1" required />
+					</label>
+					<label>
+						<span>Prix unitaire</span>
+						<input id="saleUnitPrice" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0,00" />
+					</label>
+					<label>
+						<span>Montant</span>
+						<input id="saleAmount" type="number" readonly />
+					</label>
+					<div class="form-actions">
+						<button type="submit" class="primary">Ajouter</button>
+						<button type="reset" class="secondary" id="clearSaleForm">Effacer</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Caisse du jour</div>
+				<div class="table-wrapper">
+					<table id="salesTable">
+						<thead>
+							<tr>
+								<th>Heure</th>
+								<th>Produit</th>
+								<th>Qté</th>
+								<th>Unité</th>
+								<th>Prix unitaire</th>
+								<th>Montant</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot>
+							<tr>
+								<td colspan="5" class="right">Total général</td>
+								<td id="salesTotal" class="bold">0</td>
+								<td></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<section id="settings" class="view" aria-labelledby="Paramètres">
+			<div class="card">
+				<div class="card-title">Produits</div>
+				<form id="productForm" class="form-grid">
+					<label>
+						<span>Nom du produit</span>
+						<input id="productName" type="text" placeholder="Nom" />
+					</label>
+					<label>
+						<span>Catégorie</span>
+						<select id="productCategory">
+							<option value="Bières">Bières</option>
+							<option value="Boissons gazeuses">Boissons gazeuses</option>
+							<option value="Panachés">Panachés</option>
+							<option value="Boissons énergissantes">Boissons énergissantes</option>
+							<option value="Eaux">Eaux</option>
+						</select>
+					</label>
+					<label>
+						<span>Type de casier</span>
+						<select id="productCrateSize">
+							<option value="12">12</option>
+							<option value="20">20</option>
+							<option value="24">24</option>
+						</select>
+					</label>
+					<div class="form-actions">
+						<button id="addProductBtn" type="button" class="primary admin-only">Ajouter</button>
+						<button id="resetProductsBtn" type="button" class="secondary admin-only">Réinitialiser aux valeurs par défaut</button>
+					</div>
+				</form>
+				<div class="table-wrapper">
+					<table id="productsTable">
+						<thead>
+							<tr>
+								<th>Nom</th>
+								<th>Catégorie</th>
+								<th>Type de casier</th>
+								<th class="admin-only">Actions</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Général</div>
+				<form id="settingsForm" class="form-grid">
+					<label>
+						<span>Seuil d'alerte (casiers)</span>
+						<input id="thresholdCrates" type="number" inputmode="numeric" min="0" placeholder="1" />
+					</label>
+					<label>
+						<span>Seuil d'alerte (bouteilles)</span>
+						<input id="thresholdBottles" type="number" inputmode="numeric" min="0" placeholder="4" />
+					</label>
+					<label>
+						<span>Définir/Corriger le code Admin (PIN)</span>
+						<input id="adminPin" type="password" inputmode="numeric" placeholder="****" />
+					</label>
+					<div class="form-actions">
+						<button id="saveSettingsBtn" type="button" class="primary admin-only">Enregistrer paramètres</button>
+						<button id="toggleAdminBtn" type="button" class="secondary">Basculer rôle</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="card admin-only">
+				<div class="card-title">Réinitialiser les données</div>
+				<div class="grid-2">
+					<button id="resetStockBtn" class="danger">Réinitialiser le stock</button>
+					<button id="resetSalesBtn" class="danger">Réinitialiser la caisse</button>
+				</div>
+			</div>
+		</section>
+
+		<section id="reports" class="view" aria-labelledby="Rapports">
+			<div class="card">
+				<div class="card-title">Rapport PDF quotidien</div>
+				<div class="grid-2">
+					<label>
+						<span>Date</span>
+						<input id="reportDate" type="date" />
+					</label>
+					<div class="form-actions end">
+						<button id="generatePdfBtn" class="primary">Générer le PDF</button>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-title">Aperçu rapide</div>
+				<div id="reportPreview" class="preview"></div>
+			</div>
+		</section>
+	</main>
+
+	<footer class="app-footer">© <span id="year"></span> GEOTECH • Tous droits réservés</footer>
+</body>
+</html>
