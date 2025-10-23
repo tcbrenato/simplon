@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    @page { size: A4; margin: 24mm 14mm 20mm 14mm; }
+    body { font-family: Arial, Helvetica, sans-serif; color: #222; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .brand { color: <%= brand.blue %>; }
+    .title { font-size: 22px; font-weight: 700; color: <%= brand.blue %>; text-transform: uppercase; }
+    .meta { font-size: 12px; }
+    .company { border-left: 4px solid <%= brand.gold %>; padding-left: 10px; }
+    .section { margin-top: 16px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: <%= brand.blue %>; color: #fff; text-align: left; font-size: 12px; padding: 8px; }
+    td { border-bottom: 1px solid #ddd; padding: 8px; font-size: 12px; }
+    .totals td { padding: 6px 8px; }
+    .right { text-align: right; }
+    .qr { text-align: right; margin-top: 10px; }
+    .footer { margin-top: 16px; font-size: 11px; color: #555; }
+    .signature { margin-top: 28px; display: flex; justify-content: space-between; font-size: 12px; }
+    .gold { color: <%= brand.gold %> }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="company">
+      <div class="title">Facture Pro Forma</div>
+      <div class="brand"><%= company.name %></div>
+      <div class="meta">
+        <div><%= company.activity %></div>
+        <div>Tél: <%= company.phone %> • Email: <%= company.email %></div>
+        <div>CIP: <%= company.cip %> • IFU: <%= company.ifu %></div>
+        <div>Localisation: <%= company.location %></div>
+        <div>Date d'expiration: <%= company.expirationDate %></div>
+      </div>
+    </div>
+    <div class="meta right">
+      <div>N°: <strong><%= invoice.number %></strong></div>
+      <div>Date: <%= invoice.date %></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <strong>Client</strong>
+    <div class="meta">
+      <div><%= client.name %></div>
+      <% if (client.address) { %><div><%= client.address %></div><% } %>
+      <% if (client.phone) { %><div><%= client.phone %></div><% } %>
+      <% if (client.email) { %><div><%= client.email %></div><% } %>
+    </div>
+  </div>
+
+  <div class="section">
+    <table>
+      <thead>
+        <tr>
+          <th>Désignation</th>
+          <th class="right">Qté</th>
+          <th class="right">PU</th>
+          <th class="right">Montant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach((it) => { %>
+          <tr>
+            <td><%= it.designation %></td>
+            <td class="right"><%= it.quantity %></td>
+            <td class="right"><%= it.unit_price.toLocaleString() %> FCFA</td>
+            <td class="right"><%= it.amount.toLocaleString() %> FCFA</td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section" style="display:flex; gap: 16px;">
+    <div style="flex:1">
+      <div>
+        <strong>Montant en lettres</strong>
+        <div class="meta"><%= amountInWords %></div>
+      </div>
+      <div class="qr">
+        <img src="<%= qrDataUrl %>" alt="QR" width="110" />
+      </div>
+    </div>
+    <div style="width: 280px;">
+      <table class="totals">
+        <tr>
+          <td>Sous-total</td>
+          <td class="right"><%= subtotal.toLocaleString() %> FCFA</td>
+        </tr>
+        <tr>
+          <td>Réduction (<%= discountLabel %>)</td>
+          <td class="right">- <%= discount.toLocaleString() %> FCFA</td>
+        </tr>
+        <tr>
+          <td>TVA (<%= vatLabel %>)</td>
+          <td class="right"><%= vat.toLocaleString() %> FCFA</td>
+        </tr>
+        <tr>
+          <td class="gold"><strong>Total TTC</strong></td>
+          <td class="right gold"><strong><%= total.toLocaleString() %> FCFA</strong></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    Arrêté la présente facture pro forma à la somme de <strong><%= total.toLocaleString() %> FCFA</strong> (<%= amountInWords %>).
+    <div>Mode de paiement: <%= paymentMode || 'Espèces / Virement' %></div>
+    <div>Conditions: <%= conditions || 'Offre valable jusqu\'à la date d\'expiration.' %></div>
+  </div>
+</body>
+</html>
